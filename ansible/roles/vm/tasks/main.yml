@@ -1,0 +1,33 @@
+- name: Actualizar los repositorios
+  become: true
+  ansible.builtin.package:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Instalar Podman
+  become: true
+  ansible.builtin.package:
+    name: podman
+    state: present
+
+- name: Login en el ACR desde Podman
+  containers.podman.podman_login:
+    registry: "{{ acr_login_server }}"
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+
+- name: Descargar imagen de ACR usando Podman
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/{{ acr_repo }}:{{ acr_tag }}"
+    state: present
+
+
+- name: Ejecutar NGINX en Podman
+  containers.podman.podman_container:
+    name: nginx-server
+    image: "{{ acr_login_server }}/{{ acr_repo }}:{{ acr_tag }}"
+    state: started
+    ports:
+      - "0.0.0.0:80:80"
+

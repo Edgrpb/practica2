@@ -1,0 +1,7 @@
+acr_name: "acrpractica2"
+acr_login_server: "acrpractica2.azurecr.io"
+public_image_nginx: "docker.io/library/nginx:latest"
+public_image_redis: "docker.io/library/redis:latest"
+acr_nginx_repo: "nginx"
+acr_redis_repo: "redis"
+acr_tag: "latest"

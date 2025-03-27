@@ -1,0 +1,38 @@
+- name: Login en el ACR usando Podman
+  containers.podman.podman_login:
+    registry: "{{ acr_login_server }}"
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+    
+
+- name: Pull imagen pública desde DockerHub - nginx
+  containers.podman.podman_image:
+    name: "{{ public_image_nginx }}"
+    pull: yes
+
+- name: Pull imagen pública desde DockerHub - redis
+  containers.podman.podman_image:
+    name: "{{ public_image_redis }}"
+    pull: yes
+
+- name: Etiquetar la imagen nginx para el ACR
+  containers.podman.podman_tag:
+    image: "{{ public_image_nginx }}"
+    target_names:
+      - "{{ acr_login_server }}/{{ acr_nginx_repo }}:{{ acr_tag }}"
+
+- name: Etiquetar la imagen redis para el ACR
+  containers.podman.podman_tag:
+    image: "{{ public_image_redis }}"
+    target_names:
+      - "{{ acr_login_server }}/{{ acr_redis_repo }}:{{ acr_tag }}"
+
+- name: Push de la imagen nginx al ACR
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/{{ acr_nginx_repo }}:{{ acr_tag }}"
+    push: yes
+
+- name: Push de la imagen redis al ACR
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/{{ acr_redis_repo }}:{{ acr_tag }}"
+    push: yes

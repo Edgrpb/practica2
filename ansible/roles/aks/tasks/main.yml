@@ -1,0 +1,22 @@
+- name: Crear el namespace redis-namespace 
+  become: yes
+  k8s:
+    kubeconfig: "/home/admin_azure/.kube/config"
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ app_namespace }}"
+        
+- name: Aplicar configuraciones de Kubernetes
+  become: yes
+  k8s:
+    kubeconfig: "/home/admin_azure/.kube/config"
+    definition: "{{ lookup('template', item) }}"
+    namespace: "{{ app_namespace }}"
+  loop:
+    - pvc.j2
+    - deployment_redis.j2
+    - service_redis.j2
+    - deployment_frontend.j2
+    - loandbalancer.j2

@@ -1,0 +1,3 @@
+acr_login_server: "acrpractica2.azurecr.io"
+acr_repo: "nginx"
+acr_tag: "latest"

@@ -1,0 +1,2 @@
+app_namespace: redis-namespace
+registry: "acrpractica2.azurecr.io"
